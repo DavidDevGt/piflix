@@ -1,0 +1,23 @@
+[Unit]
+Description=PiFlix media server
+After=network-online.target local-fs.target
+Wants=network-online.target
+
+[Service]
+User=raspi
+Group=raspi
+EnvironmentFile=/etc/piflix.env
+WorkingDirectory=/opt/piflix
+ExecStart=/opt/piflix/piflix
+Restart=always
+RestartSec=3
+Nice=5
+MemoryMax=180M
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/mnt/storage
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

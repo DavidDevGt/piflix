@@ -1,0 +1,24 @@
+[package]
+name = "piflix"
+version = "0.1.0"
+edition = "2021"
+description = "GordoFlix (PiFlix): servidor de biblioteca y streaming casero para Raspberry Pi"
+license = "MIT"
+publish = false
+
+[dependencies]
+axum = { version = "0.7", default-features = false, features = ["tokio", "http1", "json", "query"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "fs", "process", "net", "time", "sync", "io-util"] }
+tower-http = { version = "0.5", features = ["fs"] }
+http-body-util = "0.1"
+tower = { version = "0.4", features = ["util"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Perfil pensado para compilar en 512 MB de RAM
+[profile.release]
+opt-level = 2
+lto = false
+codegen-units = 2
+strip = true
+debug = false

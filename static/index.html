@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#09090b">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="GordoFlix: tu biblioteca personal de películas y series.">
+<title>GordoFlix</title>
+<link rel="stylesheet" href="css/base.css?v=23">
+<link rel="stylesheet" href="css/header.css?v=23">
+<link rel="stylesheet" href="css/hero.css?v=23">
+<link rel="stylesheet" href="css/library.css?v=23">
+<link rel="stylesheet" href="css/footer.css?v=23">
+<link rel="stylesheet" href="css/dialogs.css?v=23">
+<link rel="stylesheet" href="css/player.css?v=23">
+<link rel="stylesheet" href="css/responsive.css?v=23">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<a class="skip" href="#main">Saltar al contenido</a>
+
+<header class="top" id="top">
+  <h1 class="logo"><a href="/" translate="no" aria-label="GordoFlix, inicio"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="24" height="24" rx="7" fill="#e11d32"/><path d="M10 7.5l6.5 4.5-6.5 4.5z" fill="#fff"/></svg><span class="word">Gordo<span>Flix</span></span></a></h1>
+  <nav class="nav" id="nav" aria-label="Categorías">
+    <a href="/" data-kind="" class="on" aria-current="page">Todo</a>
+    <a href="?kind=pelicula" data-kind="pelicula">Películas</a>
+    <a href="?kind=serie" data-kind="serie">Series</a>
+  </nav>
+  <div class="tools" role="group" aria-label="Buscar, filtrar y acciones">
+    <form class="search" id="search" role="search" autocomplete="off">
+      <svg class="ico s sm si" aria-hidden="true" focusable="false"><use href="icons.svg#s-search"/></svg>
+      <input id="q" name="q" type="search" placeholder="Buscar títulos…" aria-keyshortcuts="/" autocomplete="off" spellcheck="false" enterkeyhint="search" aria-label="Buscar en la biblioteca">
+      <kbd class="kbd" aria-hidden="true">/</kbd>
+    </form>
+    <select id="year" name="year" aria-label="Filtrar por año"><option value="">Año</option></select>
+    <span class="sep" aria-hidden="true"></span>
+    <button id="random" type="button" class="ghost" aria-label="Elegir una al azar" title="Sorpréndeme: reproduce algo al azar"><svg class="ico s sm" aria-hidden="true" focusable="false"><use href="icons.svg#s-dice"/></svg><span class="lbl"> Al azar</span></button>
+    <button id="dl-open" type="button" class="ghost accent" aria-label="Añadir un video a la biblioteca" title="Añadir un video: desde un enlace o subiendo archivos"><svg class="ico s sm" aria-hidden="true" focusable="false"><use href="icons.svg#s-plus"/></svg><span class="lbl"> Añadir</span></button>
+    <button id="reload" type="button" class="ghost icon-only" aria-label="Recargar biblioteca" title="Recargar biblioteca"><svg class="ico s sm" aria-hidden="true" focusable="false"><use href="icons.svg#s-refresh"/></svg></button>
+  </div>
+</header>
+
+<section id="hero" class="hero" hidden aria-label="Destacado">
+  <img id="hero-img" alt="" width="780" height="439" decoding="async" fetchpriority="high">
+  <div class="hero-body">
+    <p class="eyebrow" id="hero-meta"></p>
+    <h2 id="hero-title"></h2>
+    <p class="lead" id="hero-text"></p>
+    <div class="hero-actions">
+      <button id="hero-play" type="button" class="cta"><svg class="ico f sm" aria-hidden="true" focusable="false"><use href="icons.svg#s-play"/></svg> Reproducir</button>
+      <button id="hero-info" type="button" class="cta alt"><svg class="ico s sm" aria-hidden="true" focusable="false"><use href="icons.svg#s-info"/></svg> Más información</button>
+    </div>
+  </div>
+</section>
+
+<noscript><p class="status">GordoFlix necesita JavaScript para mostrar la biblioteca.</p></noscript>
+<main id="main" tabindex="-1" aria-label="Biblioteca">
+  <p id="status" class="status" role="status"></p>
+  <div id="library"></div>
+</main>
+
+<footer id="foot" class="foot">
+  <div class="foot-in">
+    <div class="foot-brand">
+      <p class="foot-logo" translate="no"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="24" height="24" rx="7" fill="#e11d32"/><path d="M10 7.5l6.5 4.5-6.5 4.5z" fill="#fff"/></svg><span class="word">Gordo<span>Flix</span></span></p>
+      <p class="foot-tag">Tu biblioteca personal de películas y series, servida desde tu propia Raspberry Pi.</p>
+    </div>
+    <nav class="foot-col" aria-labelledby="fh-explore">
+      <h2 id="fh-explore">Explorar</h2>
+      <ul>
+        <li><a href="/" data-kind="">Todo</a></li>
+        <li><a href="?kind=pelicula" data-kind="pelicula">Películas</a></li>
+        <li><a href="?kind=serie" data-kind="serie">Series</a></li>
+        <li><button type="button" class="link" id="foot-add">Añadir un video</button></li>
+      </ul>
+    </nav>
+    <div class="foot-col foot-keys" aria-labelledby="fh-keys">
+      <h2 id="fh-keys">Atajos</h2>
+      <dl>
+        <div><dt><kbd>/</kbd></dt><dd>Buscar</dd></div>
+        <div><dt><kbd>Espacio</kbd></dt><dd>Pausa / reproducir</dd></div>
+        <div><dt><kbd>←</kbd><kbd>→</kbd></dt><dd>±10 segundos</dd></div>
+        <div><dt><kbd>F</kbd></dt><dd>Pantalla completa</dd></div>
+      </dl>
+    </div>
+    <div class="foot-col" aria-labelledby="fh-srv">
+      <h2 id="fh-srv">Servidor</h2>
+      <ul class="stat" id="foot-stat" role="status"><li>Comprobando…</li></ul>
+    </div>
+  </div>
+  <p class="foot-end">© <span id="foot-year"></span> GordoFlix · Hecho en casa con Rust</p>
+</footer>
+
+<dialog id="eps" class="modal show" aria-labelledby="eps-title">
+  <header class="show-head" id="eps-head">
+    <img id="eps-img" alt="" hidden decoding="async">
+    <button type="button" class="x" id="eps-close" aria-label="Cerrar"><svg class="ico s sm" aria-hidden="true" focusable="false"><use href="icons.svg#s-x"/></svg></button>
+    <div class="show-info">
+      <p class="eyebrow" id="eps-meta"></p>
+      <h2 id="eps-title"></h2>
+    </div>
+  </header>
+  <div class="show-body">
+    <p class="lead" id="eps-text"></p>
+    <div class="show-prog" id="eps-prog" hidden>
+      <span class="bar" aria-hidden="true"><i></i></span>
+      <small id="eps-prog-t"></small>
+    </div>
+    <div class="show-actions">
+      <button type="button" class="cta" id="eps-play"></button>
+      <button type="button" class="btn-line" id="eps-cover-btn"><svg class="ico s sm" aria-hidden="true" focusable="false"><use href="icons.svg#s-edit"/></svg> Editar</button>
+    </div>
+    <div id="eps-seasons" class="chips" role="group" aria-label="Temporadas" hidden></div>
+    <div id="eps-body" class="eps-body"></div>
+  </div>
+</dialog>
+
+<dialog id="ed" class="modal" aria-labelledby="ed-h">
+  <div class="modal-h">
+    <h2 id="ed-h">Editar</h2>
+    <button type="button" class="x" id="ed-close" aria-label="Cerrar"><svg class="ico s sm" aria-hidden="true" focusable="false"><use href="icons.svg#s-x"/></svg></button>
+  </div>
+  <form id="eps-cover" class="cover-form" autocomplete="off">
+    <canvas id="cv-canvas" width="400" height="600" role="img" aria-label="Vista previa de la carátula"></canvas>
+    <div class="cover-fields">
+      <label><span id="cv-title-l">Título</span>
+        <input id="cv-title" maxlength="80" placeholder="Vacío = título original">
+      </label>
+      <label>Carátula nueva (opcional · JPG, PNG o WebP)
+        <input id="cv-file" type="file" accept="image/*">
+      </label>
+      <label>Clave de administrador
+        <input id="cv-token" type="password" required autocomplete="off" spellcheck="false">
+      </label>
+      <p id="cv-msg" class="msg" role="alert"></p>
+      <p class="hint" id="cv-hint">Si no tiene carátula, al cambiar el título se busca de nuevo en TMDB.</p>
+      <button class="cta" type="submit" id="cv-go" disabled>Guardar cambios</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dl" class="modal" aria-labelledby="dl-title">
+  <div class="modal-h">
+    <h2 id="dl-title">Añadir a la biblioteca</h2>
+    <button type="button" class="x" id="dl-close" aria-label="Cerrar"><svg class="ico s sm" aria-hidden="true" focusable="false"><use href="icons.svg#s-x"/></svg></button>
+  </div>
+  <div class="tabs" role="group" aria-label="Cómo añadir el video">
+    <button type="button" class="tab" id="tab-link" aria-pressed="true">Desde un enlace</button>
+    <button type="button" class="tab" id="tab-up" aria-pressed="false">Subir archivo</button>
+  </div>
+  <form id="dl-form" autocomplete="off">
+    <label>Enlace directo al video
+      <input id="dl-url" name="url" type="url" inputmode="url" required spellcheck="false" placeholder="https://…/pelicula.mp4">
+    </label>
+    <label>Página de origen (opcional)
+      <input id="dl-referer" name="referer" type="url" inputmode="url" spellcheck="false" placeholder="https://…/pagina-donde-obtuviste-el-enlace">
+    </label>
+    <div class="two">
+      <label>Guardar en
+        <select id="dl-kind" name="kind"><option value="pelicula">Películas</option><option value="serie">Series</option></select>
+      </label>
+      <label id="dl-year-l">Año (opcional)
+        <input id="dl-year" name="year" type="number" inputmode="numeric" min="1900" max="2100" placeholder="2014…">
+      </label>
+    </div>
+    <label id="dl-show-w" hidden>Serie
+      <select id="dl-show" name="show"></select>
+    </label>
+    <label id="dl-name-w"><span id="dl-name-l">Título de la película</span>
+      <input id="dl-name" name="title" required maxlength="80" placeholder="p. ej. El Hijo de Batman…">
+    </label>
+    <div class="two" id="dl-ep" hidden>
+      <label>Temporada <input id="dl-season" name="season" type="number" inputmode="numeric" min="0" max="99" placeholder="1…"></label>
+      <label>Episodio <input id="dl-episode" name="episode" type="number" inputmode="numeric" min="1" max="999" placeholder="1…"></label>
+    </div>
+    <label>Clave de administrador
+      <input id="dl-token" name="admin-token" type="password" required autocomplete="off" spellcheck="false">
+    </label>
+    <p id="dl-msg" class="msg" role="alert"></p>
+    <button class="cta" type="submit" id="dl-go">Iniciar descarga</button>
+  </form>
+  <form id="up-form" autocomplete="off" hidden>
+    <div class="pick">
+      <label>Video, o varios para subir una serie completa
+        <input id="up-file" type="file" multiple accept="video/*,.mkv,.avi,.m4v,.mov">
+      </label>
+      <button type="button" class="btn-line" id="up-dir-btn"><svg class="ico s sm" aria-hidden="true" focusable="false"><use href="icons.svg#s-list"/></svg> Elegir carpeta</button>
+      <input id="up-dir" type="file" webkitdirectory hidden>
+    </div>
+    <p id="up-info" class="hint" aria-live="polite"></p>
+    <div class="two">
+      <label>Guardar en
+        <select id="up-kind"><option value="pelicula">Películas</option><option value="serie">Series</option></select>
+      </label>
+      <label id="up-year-l">Año (opcional)
+        <input id="up-year" type="number" inputmode="numeric" min="1900" max="2100" placeholder="2014…">
+      </label>
+    </div>
+    <label id="up-show-w" hidden>Serie
+      <select id="up-show"></select>
+    </label>
+    <label id="up-name-w"><span id="up-name-l">Título de la película</span>
+      <input id="up-name" required maxlength="80" placeholder="p. ej. El Hijo de Batman…">
+    </label>
+    <div class="two" id="up-ep" hidden>
+      <label>Temporada <input id="up-season" type="number" inputmode="numeric" min="0" max="99" placeholder="1…"></label>
+      <label>Episodio <input id="up-episode" type="number" inputmode="numeric" min="1" max="999" placeholder="1…"></label>
+    </div>
+    <div id="up-batch" hidden>
+      <label id="up-all-l">Temporada de todos los capítulos (opcional)
+        <input id="up-all" type="number" inputmode="numeric" min="0" max="99" placeholder="Dejar vacío para usar lo detectado">
+      </label>
+      <ol id="up-rows" class="urows"></ol>
+    </div>
+    <label>Clave de administrador
+      <input id="up-token" type="password" required autocomplete="off" spellcheck="false">
+    </label>
+    <progress id="up-bar" hidden aria-label="Progreso de la subida"></progress>
+    <p id="up-msg" class="msg" role="alert"></p>
+    <button class="cta" type="submit" id="up-go">Subir a la biblioteca</button>
+  </form>
+  <h3 class="sub">Descargas</h3>
+  <ul id="dl-list" class="jobs" aria-live="polite"></ul>
+</dialog>
+
+<div id="player" class="player" hidden role="dialog" aria-modal="true" aria-labelledby="ptitle">
+  <div class="stage paused" id="stage" tabindex="-1">
+    <video id="video" playsinline preload="metadata"></video>
+
+    <div class="topbar">
+      <button type="button" data-act="close" aria-label="Cerrar reproductor" title="Cerrar (Esc)"><svg class="ico s"><use href="icons.svg#s-chev"/></svg></button>
+      <span id="ptitle"></span>
+    </div>
+
+    <div class="cluster">
+      <button type="button" data-act="back" aria-label="Retroceder 10 segundos"><svg class="ico s"><use href="icons.svg#s-back"/></svg></button>
+      <button type="button" class="big" data-act="toggle" aria-label="Reproducir"><svg class="ico f i-play"><use href="icons.svg#s-play"/></svg><svg class="ico f i-pause"><use href="icons.svg#s-pause"/></svg></button>
+      <button type="button" data-act="fwd" aria-label="Avanzar 10 segundos"><svg class="ico s"><use href="icons.svg#s-fwd"/></svg></button>
+    </div>
+
+    <div class="flash" id="flash" aria-hidden="true"></div>
+    <div class="toast" id="toast" role="status"></div>
+    <div class="next" id="next" hidden role="alertdialog" aria-labelledby="next-t">
+      <p class="eyebrow">A continuación · <span id="next-n">8</span> s</p>
+      <p class="next-t" id="next-t"></p>
+      <div class="next-btns">
+        <button type="button" class="cta" id="next-go"><svg class="ico f sm" aria-hidden="true" focusable="false"><use href="icons.svg#s-play"/></svg> Reproducir ahora</button>
+        <button type="button" class="btn-line" id="next-cancel">Cancelar</button>
+      </div>
+    </div>
+    <div class="spinner" id="spinner" hidden role="status" aria-label="Cargando video…"></div>
+
+    <div class="controls">
+      <input id="seek" class="rng" type="range" min="0" max="1000" value="0" aria-label="Progreso del video">
+      <div class="row">
+        <button type="button" class="only-fine" data-act="toggle" aria-label="Reproducir" title="Reproducir/Pausar (espacio/K)"><svg class="ico f i-play"><use href="icons.svg#s-play"/></svg><svg class="ico f i-pause"><use href="icons.svg#s-pause"/></svg></button>
+        <button type="button" class="only-fine" data-act="back" aria-label="Retroceder 10 segundos" title="Retroceder 10 s (←/J)"><svg class="ico s"><use href="icons.svg#s-back"/></svg></button>
+        <button type="button" class="only-fine" data-act="fwd" aria-label="Avanzar 10 segundos" title="Avanzar 10 s (→/L)"><svg class="ico s"><use href="icons.svg#s-fwd"/></svg></button>
+        <div class="volbox only-fine">
+          <button type="button" data-act="mute" aria-label="Silenciar" title="Silenciar (M)"><svg class="ico f i-vol"><use href="icons.svg#s-vol"/></svg><svg class="ico s i-mute"><use href="icons.svg#s-mute"/></svg></button>
+          <input id="vol" class="rng" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volumen">
+        </div>
+        <span id="time" class="time">0:00 / 0:00</span>
+        <span class="grow"></span>
+        <button type="button" class="speed" data-act="speed" aria-label="Velocidad 1×. Cambiar" title="Velocidad de reproducción">1×</button>
+        <button type="button" class="only-fine" data-act="pip" aria-label="Imagen en imagen" title="Imagen en imagen (P)"><svg class="ico s"><use href="icons.svg#s-pip"/></svg></button>
+        <button type="button" data-act="fs" aria-label="Pantalla completa" title="Pantalla completa (F)"><svg class="ico s i-fs"><use href="icons.svg#s-fs"/></svg><svg class="ico s i-fsx"><use href="icons.svg#s-fsx"/></svg></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/core.js?v=23"></script>
+<script src="js/catalog.js?v=23"></script>
+<script src="js/controls.js?v=23"></script>
+<script src="js/downloads.js?v=23"></script>
+<script src="js/cover.js?v=23"></script>
+<script src="js/upload.js?v=23"></script>
+<script src="js/player/resume.js?v=23"></script>
+<script src="js/player/ui.js?v=23"></script>
+<script src="js/player/transport.js?v=23"></script>
+<script src="js/player/gestures.js?v=23"></script>
+<script src="js/player/keys.js?v=23"></script>
+<script src="js/player/next.js?v=23"></script>
+<script src="js/player/platform.js?v=23"></script>
+<script src="js/player.js?v=23"></script>
+<script src="js/main.js?v=23"></script>
+</body>
+</html>

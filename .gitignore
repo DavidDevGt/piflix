@@ -1,0 +1,8 @@
+/target
+*.part
+*.bak*
+*.orig*
+*.pre-*
+.env
+*.env
+!deploy/piflix.env.example

@@ -1,0 +1,51 @@
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  :root { --header-h: 112px; }
+  .top { flex-wrap: wrap; gap: 6px 14px; }
+  .nav { order: 3; width: 100%; margin: 0 -6px; }
+  .tools { flex: 1; }
+  .search { flex: 1; }
+  input[type=search], .search:focus-within input[type=search] { width: 100%; }
+  .sep { display: none; }
+  .hero { height: clamp(320px, 56vh, 480px); }
+  .hero-body { bottom: 10%; }
+  .hero::before { background: linear-gradient(90deg, #09090bf2 0%, #09090b99 55%, #09090b33 100%); }
+}
+@media (max-width: 560px) {
+  /* cabecera en 3 filas: logo + acciones / buscador + año / categorías; no es fija para no robar pantalla */
+  :root { --header-h: 152px; }
+  .top { position: absolute; gap: 8px; }
+  .logo { order: 1; margin-right: auto; font-size: 26px; }
+  .tools { display: contents; }
+  .tools .ghost { order: 2; width: 44px; min-height: 44px; padding: 0; }
+  .search { order: 3; flex: 1 1 200px; }
+  #q { width: 100%; min-height: 44px; }
+  .search .si { left: 14px; }
+  #year { order: 3; width: 104px; min-height: 44px; }
+  .nav { order: 4; margin: 0 -6px; }
+  .nav a { padding: 10px 12px; }
+  input, select, textarea { font-size: 16px; } /* iOS no hace zoom al enfocar */
+  .modal input, .modal select { min-height: 46px; font-size: 16px; }
+  .modal { padding: 16px; max-height: 92dvh; }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 16px 12px; }
+  .lbl { display: none; }
+  .sec-h { font-size: 18px; }
+  .hero { height: 460px; }
+  .hero-body { bottom: 28px; }
+  .lead { -webkit-line-clamp: 2; font-size: 14px; }
+  .card .play { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* modo de alto contraste de Windows / forzado */
+@media (forced-colors: active) {
+  .card, .ghost, .cta, .ep, .x, select, input { border: 1px solid ButtonText; }
+  .nav a.on::after { background: Highlight; }
+  .card:focus-visible, :focus-visible { outline: 3px solid Highlight; }
+}
+@media (prefers-contrast: more) {
+  :root { --muted: #c8c8d0; --line: rgba(255, 255, 255, .28); }
+}
